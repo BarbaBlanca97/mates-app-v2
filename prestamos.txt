@@ -1,0 +1,111 @@
+#INGRESAR UN NUEVO PRESTAMO
+> verbo: POST
+
+request info:
+{
+    persona: {
+        dni,
+        nombre,
+        apellido,
+        facultad
+    }
+    pedido: {
+        mates,
+        bombillas,
+        termos,
+        yerba
+    }
+}
+
+La informacion del prestamo.
+
+> Errores:
+    - Se aceptan los campos de pedido como nulos
+    - Que la facultad indicada no exista
+        -> se la añade como "desconocida"
+
+#VER TODOS LOS PRESTAMOS
+> verbo: GET
+
+response info:
+{
+    [
+        {
+            idPrestamo,
+            persona: {
+                dni,
+                nombre,
+                apellido,
+                facultad
+            },
+            pedido: {
+                mates,
+                bombillas,
+                termos,
+                yerba,
+                fecha
+            },
+            devolucion: {
+                mates,
+                bombillas,
+                termos,
+                fecha
+            }
+        },
+        ...
+    ]
+}
+
+Se buscan todos los prestamos, primero los mas recientes, por ahora se devuelven los primeros 10
+
+Ver como determinar cuantos debo devolver, y algun modo de dar la opcion de que rango de prestamos quiere
+
+Añadir filtros
+
+#RECIBIR PRESTAMO
+> verbo: PUT
+
+request info:
+{
+    idPrestamo,
+    devolucion: {
+        mates,
+        bombillas,
+        termos
+    }
+}
+
+Se busca el prestamo correspondiente a ese id y se actualiza su devolucion
+
+> Errores:
+    - No existe el prestamo
+        -> no se registra el pedido
+    - Cantidades negativas
+        -> no se registra el pedido
+    - Se aceptan devoluciones nulas
+        -> se trata todo, o el item faltante, como 0
+
+#MODELOS
+> prestamo:
+{
+    idPrestamo,
+    persona: {
+        dni,
+        nombre,
+        apellido,
+        facultad
+    },
+    pedido: {
+        mates,
+        bombillas,
+        termos,
+        yerba,
+        fecha
+    },
+    devolucion: {
+        mates,
+        bombillas,
+        termos,
+        fecha
+    }
+}

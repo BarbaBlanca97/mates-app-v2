@@ -3,6 +3,7 @@
   margin: 16px;
 }
 
-.App {
-  text-align: center;
+.table-container {
+  overflow-x: auto;
+  overflow-y: auto;
 }

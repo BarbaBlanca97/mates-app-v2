@@ -13,6 +13,7 @@ import {
 /*
 Component modules imports */
 import LoansTable from './components/loans/LoansTable';
+import NewLoan from './components/loans/NewLoan';
 
 import api from './api/api';
 
@@ -53,7 +54,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
           <MDBNavbar color="white" >
             <MDBNavbarBrand><strong>Mates App</strong></MDBNavbarBrand>
           </MDBNavbar>
@@ -64,10 +65,15 @@ class App extends React.Component {
             >
           <MDBCard
             className="card w-100"
-            wide >
+            wide
+          >
 
             <MDBCardBody style={{ paddingLeft: "0px", paddingRight: "0px" }}>
-              <MDBCardTitle> Pedidos </MDBCardTitle>
+              <div className="d-flex flex-row justify-content-between align-items-center mx-5">
+                <MDBCardTitle> Pedidos </MDBCardTitle>
+                
+                <NewLoan />
+              </div>
 
               <LoansTable loans={this.state.loans}></LoansTable>
             </MDBCardBody>

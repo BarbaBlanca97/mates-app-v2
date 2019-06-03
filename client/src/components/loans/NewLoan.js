@@ -9,21 +9,23 @@ import {
 } from 'mdbreact';
 
 import CreateLoan from './CreateLoan';
+import { connect } from 'react-redux';
+import { createLoan } from '../../redux/actions/loans.actions';
 
 class NewLoan extends React.Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
 
         this.state = {
             modal: false
         }
 
-        this.toggle = this.toggle.bind(this);
-        this.handleLoanSubmit = this.handleLoanSubmit.bind(this);
+        this.toggleModal        = this.toggleModal.bind(this);
+        this.handleLoanSubmit   = this.handleLoanSubmit.bind(this);
     }
 
-    toggle () {
+    toggleModal() {
         this.setState((state) => {
             return {
                 modal: !state.modal
@@ -31,27 +33,42 @@ class NewLoan extends React.Component {
         });
     }
 
-    handleLoanSubmit (loan) {
+    handleLoanSubmit(loan) {
         console.log(loan);
-        this.toggle();
+        this.props.dispatch(createLoan({
+            persona: {
+                dni: loan.dni,
+                name: loan.name,
+                lastName: loan.lastName,
+                facultad: 'unknown'
+            },
+            pedido: {
+                mates: loan.mates,
+                bombillas: loan.bombillas,
+                termos: loan.termos,
+                yerba: loan.yerba
+            }
+        }));
+        this.toggleModal();
     }
 
-    render () {
+    render() {
         return (
             <div>
                 <MDBBtn
                     size="md"
-                    onClick={ this.toggle }
-                > <MDBIcon icon="plus" className="mr-1" /> NUEVO </MDBBtn>
-                <MDBModal isOpen={this.state.modal} toggle={this.toggle} size="sm">
-                    <MDBModalHeader toggle={this.toggle}>Nuevo préstamo</MDBModalHeader>
-                        <MDBModalBody>
-                            <CreateLoan handleSubmit={ loan => this.handleLoanSubmit(loan) }/>
-                        </MDBModalBody>
+                    onClick={this.toggleModal}
+                ><MDBIcon icon="plus" className="mr-1" /> NUEVO </MDBBtn>
+
+                <MDBModal isOpen={this.state.modal} toggle={this.toggleModal} size="md">
+                    <MDBModalHeader toggle={this.toggleModal}>Nuevo préstamo</MDBModalHeader>
+                    <MDBModalBody>
+                        <CreateLoan handleSubmit={loan => this.handleLoanSubmit(loan)} />
+                    </MDBModalBody>
                 </MDBModal>
             </div>
         );
     }
 }
 
-export default NewLoan;
+export default connect()(NewLoan);

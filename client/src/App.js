@@ -14,42 +14,16 @@ import {
 Component modules imports */
 import LoansTable from './components/loans/LoansTable';
 import NewLoan from './components/loans/NewLoan';
+import { getLoans } from './redux/actions/loans.actions';
 
-import api from './api/api';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loans: [] /*
-      loans structure: { _id, dni, name, loan, devolucion },
-      */
-    }
-  }
-
+  /*
+  En la activacion del componente se despacaha la accion REFRESH_LOANS */
   componentDidMount() {
-    this.getLoans();
-  }
-
-  getLoans() {
-    api.getLoans()
-      .then((loans) => {/* Parseo de la respuesta */
-        const parsedLoans = loans.map(
-          (loan) => {
-            return {
-              _id: loan._id,
-              dni: loan.persona.dni,
-              name: `${loan.persona.name} ${loan.persona.lastName}`,
-              pedido: loan.pedido,
-              devolucion: loan.devolucion
-            }
-          }
-        );
-
-        this.setState({ loans: parsedLoans });
-      });
+    this.props.dispatch(getLoans());
   }
 
   render() {
@@ -68,14 +42,14 @@ class App extends React.Component {
             wide
           >
 
-            <MDBCardBody style={{ paddingLeft: "0px", paddingRight: "0px" }}>
+            <MDBCardBody className="px-0">
               <div className="d-flex flex-row justify-content-between align-items-center mx-5">
                 <MDBCardTitle> Pedidos </MDBCardTitle>
                 
                 <NewLoan />
               </div>
 
-              <LoansTable loans={this.state.loans}></LoansTable>
+              <LoansTable loans={this.props.loans}></LoansTable>
             </MDBCardBody>
 
           </MDBCard>
@@ -86,4 +60,13 @@ class App extends React.Component {
   }
 }
 
-export default App;
+/*
+Cada cambio de estado se envia a travez de las props
+por el provider, esta funcion mapea lo interesante */
+const mapStateToProps = (state) => {
+  return {
+    loans: state.loans
+  }
+}
+
+export default connect(mapStateToProps)(App);

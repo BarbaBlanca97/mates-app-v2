@@ -10,7 +10,7 @@ const parseBody = function(req, res, next) {
                 dni: req.body.persona.dni,
                 name: req.body.persona.name,
                 lastName: req.body.persona.lastName,
-                facultad: req.body.persona.facultad
+                facultad: req.body.persona.facultad ? req.body.persona.facultad : 'desconocido' 
             },
             pedido: !req.body.pedido ? null : {
                 mates: req.body.pedido.mates,

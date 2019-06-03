@@ -3,15 +3,20 @@ import React from 'react';
 Component imports */
 import {
     MDBInput,
-    MDBBtn
+    MDBBtn,
+    MDBRow,
+    MDBCol
 } from 'mdbreact';
 
 class CreateLoan extends React.Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
 
         this.state = {
+            dni: 0,
+            name: '',
+            lastName: '',
             mates: 0,
             bombillas: 0,
             termos: 0,
@@ -19,73 +24,133 @@ class CreateLoan extends React.Component {
         }
 
         this.handleInputChanges = this.handleInputChanges.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit       = this.handleSubmit.bind(this);
     }
 
-    handleInputChanges (e) {
+    handleInputChanges(e) {
+        let value;
+        /*
+        Estría bueno tener este parser como función auxiliar */
+        switch (e.target.type) {
+            case 'number':
+                value = parseInt(e.target.value)
+                break;
+
+            case 'checkbox':
+                value = e.target.checked
+                break;
+
+            case 'text':
+                value = e.target.value
+                break;
+        }
+
         this.setState({
-            [e.target.id]: e.target.type === "number" ? parseInt(e.target.value) : e.target.checked
+            [e.target.id]: value
         });
     }
 
-    handleSubmit (e) {
-        e.preventDefault();
+    handleSubmit(e) {
+        e.preventDefault(); // Evitando que se recargue la página con el submit
+        /*
+        Callback para reportar submit */
         this.props.handleSubmit(this.state);
     }
 
     render() {
         return (
             <div className="text-center">
-                <form onSubmit={ this.handleSubmit }>
-                <div>
+                <form onSubmit={this.handleSubmit}>
+                    <div>
+                        <h5> Cliente </h5>
 
-                    <MDBInput
-                        label="Mates"
-                        type="number"
-                        group
-                        validate
-                        error="wrong"
-                        outline
-                        id="mates"
-                        onChange={ (event) => { this.handleInputChanges(event) }}
-                        // placeholder="0"
-                    />
-
-                    <MDBInput
-                        label="Bombillas"
-                        type="number"
-                        group
-                        validate
-                        error="wrong"
-                        outline
-                        id="bombillas"
-                        onChange={ (event) => { this.handleInputChanges(event) }}
-                        // placeholder="0"
-                    />
-
-                    <MDBInput
-                        label="Termos"
-                        type="number"
-                        group
-                        validate
-                        error="wrong"
-                        outline
-                        id="termos"
-                        onChange={ (event) => { this.handleInputChanges(event) }}
-                        // placeholder="0"
-                    />
-
-                    <div className="form-check">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="yerba"
-                            onChange={ (event) => { this.handleInputChanges(event) }}
+                        <MDBInput
+                            label="DNI"
+                            type="number"
+                            group
+                            validate
+                            error="wrong"
+                            outline
+                            id="dni"
+                            onChange={(event) => { this.handleInputChanges(event) }}
                         />
-                        <label htmlFor="yerba" className="grey-text">Yerba</label>
+                        <MDBInput
+                            label="Nombre"
+                            type="text"
+                            group
+                            validate
+                            error="wrong"
+                            outline
+                            id="name"
+                            onChange={(event) => { this.handleInputChanges(event) }}
+                        />
+                        <MDBInput
+                            label="Apellido"
+                            type="text"
+                            group
+                            validate
+                            error="wrong"
+                            outline
+                            id="lastName"
+                            onChange={(event) => { this.handleInputChanges(event) }}
+                        />
+
+                        <h5> Pedido </h5>
+
+                        <MDBRow>
+                            <MDBCol>
+                                <MDBInput
+                                    label="Mates"
+                                    type="number"
+                                    group
+                                    validate
+                                    error="wrong"
+                                    outline
+                                    id="mates"
+                                    onChange={(event) => { this.handleInputChanges(event) }}
+                                    value={ this.state.mates.toString() }
+                                />
+
+                                <MDBInput
+                                    label="Bombillas"
+                                    type="number"
+                                    group
+                                    validate
+                                    error="wrong"
+                                    outline
+                                    id="bombillas"
+                                    onChange={(event) => { this.handleInputChanges(event) }}
+                                    value={ this.state.bombillas.toString() }
+                                />
+                            </MDBCol>
+
+                            <MDBCol>
+                                <MDBInput
+                                    label="Termos"
+                                    type="number"
+                                    group
+                                    validate
+                                    error="wrong"
+                                    outline
+                                    id="termos"
+                                    onChange={(event) => { this.handleInputChanges(event) }}
+                                    value={ this.state.termos.toString() }
+                                />
+
+                                <div className="form-check">
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id="yerba"
+                                        onChange={(event) => { this.handleInputChanges(event) }}
+                                    />
+                                    <label htmlFor="yerba" className="grey-text">Yerba</label>
+                                </div>
+                            </MDBCol>
+                        </MDBRow>
+
+                        <MDBBtn type="submit" size="md" color="primary"> CREAR </MDBBtn>
                     </div>
-                    <MDBBtn type="submit" size="md" color="primary"> CREAR </MDBBtn>
-                </div>
                 </form>
             </div>
         );

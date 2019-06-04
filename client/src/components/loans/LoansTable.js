@@ -3,7 +3,9 @@ import React from 'react';
 import {
     MDBTable,
     MDBTableBody,
-    MDBTableHead
+    MDBTableHead,
+    MDBBtn,
+    MDBIcon
 } from 'mdbreact';
 
 /**
@@ -22,6 +24,7 @@ class LoansTable extends React.Component {
                     <th>Nombre</th>
                     <th>Pedido</th>
                     <th>Devolución</th>
+                    <th>Acciones</th>
                 </tr>
                 </MDBTableHead>
                 <MDBTableBody>
@@ -40,6 +43,13 @@ class LoansTable extends React.Component {
                                 :
                                 <span className="text-danger" >No devuelto</span>
                             }
+                            </td>
+                            <td className="align-middle">
+                                <MDBBtn
+                                    size="sm"
+                                    className="z-depth-0"
+                                    outline
+                                ><MDBIcon icon="check"/></MDBBtn>
                             </td>
                         </tr>);
                     }) }

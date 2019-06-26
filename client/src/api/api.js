@@ -1,3 +1,7 @@
+/*
+@TODO: Ver de migrar esto a las acciones
+*/
+
 import axios from 'axios';
 
 const baseUrl = '/api'
@@ -56,7 +60,27 @@ const createLoan = function (loan) {
     });
 }
 
+const reciveLoan = function (recivedLoan) {
+  return axios.put(baseUrl + '/prestamos', recivedLoan)
+    .then((res) => {
+      if(!res.data) return Promise.reject({ message: "respuesta nula" });
+
+      return {
+        _id: res.data._id,
+        dni: res.data.persona.dni,
+        name: `${res.data.persona.name} ${res.data.persona.lastName}`,
+        pedido: res.data.pedido,
+        devolucion: res.data.devolucion
+      }
+    })
+    .catch((error) => {
+      console.log('error recibiendo prestamo', error);
+      return Promise.reject(error);
+    });
+}
+
 export default {
   getLoans,
-  createLoan
+  createLoan,
+  reciveLoan
 }

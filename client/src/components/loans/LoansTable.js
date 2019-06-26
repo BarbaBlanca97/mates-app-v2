@@ -3,10 +3,10 @@ import React from 'react';
 import {
     MDBTable,
     MDBTableBody,
-    MDBTableHead,
-    MDBBtn,
-    MDBIcon
+    MDBTableHead
 } from 'mdbreact';
+
+import ReciveLoan from './ReciveLoan';
 
 /**
  * Toma un array de loans y los muestra en una tabla
@@ -45,11 +45,10 @@ class LoansTable extends React.Component {
                             }
                             </td>
                             <td className="align-middle">
-                                <MDBBtn
-                                    size="sm"
-                                    className="z-depth-0"
-                                    outline
-                                ><MDBIcon icon="check"/></MDBBtn>
+                                { !value.devolucion ?
+                                    <ReciveLoan _id={ value._id }></ReciveLoan> :
+                                    <span> Devuelto </span>
+                                }
                             </td>
                         </tr>);
                     }) }

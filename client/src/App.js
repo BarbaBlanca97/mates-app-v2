@@ -28,33 +28,35 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-          <MDBNavbar color="white" >
-            <MDBNavbarBrand><strong>Mates App</strong></MDBNavbarBrand>
-          </MDBNavbar>
+      <div id="app-container">
+        <MDBNavbar color="white" position="fixed" >
+          <MDBNavbarBrand><strong>Mates App</strong></MDBNavbarBrand>
+        </MDBNavbar>
 
+        <div>
           <MDBContainer
             fluid
             className="d-flex justify-content-center w-responsive"
-            >
-          <MDBCard
-            className="card w-100"
-            wide
           >
+            <MDBCard
+              className="card w-100"
+              wide
+            >
 
-            <MDBCardBody className="px-0">
-              <div className="d-flex flex-row justify-content-between align-items-center mx-5">
-                <MDBCardTitle> Pedidos </MDBCardTitle>
-                
-                <NewLoan />
-              </div>
+              <MDBCardBody className="px-0">
+                <div className="d-flex flex-row justify-content-between align-items-center mx-5">
+                  <MDBCardTitle> Pedidos </MDBCardTitle>
 
-              <LoansTable loans={this.props.loans}></LoansTable>
-            </MDBCardBody>
+                  <NewLoan />
+                </div>
 
-          </MDBCard>
+                <LoansTable loans={this.props.loans}></LoansTable>
+              </MDBCardBody>
+
+            </MDBCard>
 
           </MDBContainer>
+        </div>
       </div>
     );
   }

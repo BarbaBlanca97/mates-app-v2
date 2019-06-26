@@ -13,7 +13,8 @@ const getLoans = () => {
                     type: 'REFRESH_LOANS',
                     loans: loans
                 });
-            });
+            })
+            .catch(()=>{});
     }
 }
 
@@ -21,13 +22,36 @@ const createLoan = (loan) => {
 
     return (dispatch) => {
         api.createLoan(loan)
-        .then((newLoan) => {
-            dispatch({
-                type: 'CREATE_LOAN',
-                loan: newLoan
-            });
-        });
+            .then((newLoan) => {
+                dispatch({
+                    type: 'CREATE_LOAN',
+                    loan: newLoan
+                });
+            })
+            .catch(()=>{});
     }
 }
 
-export { getLoans, createLoan };
+const reciveLoan = (recivedLoan) => {
+
+    return (dispatch) => {
+        api.reciveLoan({
+            _id: recivedLoan._id,
+            devolucion: {
+                mates: recivedLoan.mates,
+                bombillas: recivedLoan.bombillas,
+                termos: recivedLoan.termos
+            }
+        })
+            .then((updatedLoan) => {
+                dispatch({
+                    type: 'RECIVE_LOAN',
+                    _id: updatedLoan._id,
+                    recivedLoan: updatedLoan.devolucion
+                });
+            })
+            .catch(()=>{});
+    }
+}
+
+export { reciveLoan, getLoans, createLoan };

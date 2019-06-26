@@ -13,7 +13,20 @@ const loanReducer = (state = initalState, action) => {
         }
 
         case 'CREATE_LOAN': {
-            newState = [ ...state, action.loan ];
+            newState = [...state, action.loan];
+            break;
+        }
+
+        case 'RECIVE_LOAN': {
+            newState = state.map((loan) => {
+                return loan._id === action._id ?
+                    {
+                        ...loan,
+                        devolucion: action.recivedLoan
+                    } :
+                    loan;
+            });
+            
             break;
         }
 

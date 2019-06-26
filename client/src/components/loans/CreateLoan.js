@@ -30,7 +30,7 @@ class CreateLoan extends React.Component {
     handleInputChanges(e) {
         let value;
         /*
-        Estría bueno tener este parser como función auxiliar */
+        Estaría bueno tener este parser como función auxiliar */
         switch (e.target.type) {
             case 'number':
                 value = parseInt(e.target.value)

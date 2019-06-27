@@ -54,4 +54,18 @@ const reciveLoan = (recivedLoan) => {
     }
 }
 
-export { reciveLoan, getLoans, createLoan };
+const changePage = (offset, limit) => {
+
+    return (dispatch) => {
+        api.getLoans(offset, limit)
+            .then((loans) => {
+                dispatch({
+                    type: "REFRESH_LOANS",
+                    loans: loans
+                });
+            })
+            .catch()
+    }
+}
+
+export { reciveLoan, getLoans, createLoan, changePage };

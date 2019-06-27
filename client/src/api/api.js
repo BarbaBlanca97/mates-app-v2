@@ -6,8 +6,8 @@ import axios from 'axios';
 
 const baseUrl = '/api'
 
-const getLoans = function () {
-  return axios.get(baseUrl + '/prestamos')
+const getLoans = function (offset = 0, limit = 10) {
+  return axios.get(baseUrl + `/prestamos?offset=${offset}&limit=${limit}`)
     .then(function (res) {
       return res.data.map(
         (loan) => {

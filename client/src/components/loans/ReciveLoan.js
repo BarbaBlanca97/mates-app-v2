@@ -34,6 +34,7 @@ class ReciveLoan extends React.Component {
     handleSubmit(recivedLoan) {
         this.toggleModal();
         this.props.dispatch(reciveLoan({ ...recivedLoan, _id: this.props._id }));
+        this.props.dispatch({ type: 'SHOW_LOADING' });
     }
 
     render() {

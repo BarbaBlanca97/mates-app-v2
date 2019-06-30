@@ -60,7 +60,12 @@ const getLoans = function (req, res, next) {
         const db = client.db(dbName);
 
         db.collection(loansCollection)
-            .find()
+            .find({
+                ...(req.query.nombre && { "persona.name": req.query.nombre }),
+                ...(req.query.apellido && { "persona.lastName": req.query.apellido }),
+                ...(req.query.dni && { "persona.dni": parseInt(req.query.dni) }),
+                ...(!(req.query.devuelto == null) && { "devolucion": (req.query.devuelto === "true") ? { $type: "object" } : null })
+            })
             .skip(resultOffset)
             .limit(resultLimit)
             .toArray(function (error, docs) {
@@ -89,7 +94,7 @@ const reciveLoan = function (req, res, next) {
 
         db.collection(loansCollection).findOneAndUpdate(
             { _id: new ObjectId(req.body._id), devolucion: null }, /*   Buscar con esto */
-            { $set: { devolucion: req.body.devolucion } }, /*            Setear esto */
+            { $set: { devolucion: req.body.devolucion } }, /*           Setear esto */
             { returnOriginal: false }, /*                               Config options */
             function (error, result) {
                 if (error) {

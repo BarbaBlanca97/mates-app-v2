@@ -1,13 +1,30 @@
-/*
-@TODO: Ver de migrar esto a las acciones
-*/
-
 import axios from 'axios';
 
 const baseUrl = '/api'
-
-const getLoans = function (offset = 0, limit = 10) {
-  return axios.get(baseUrl + `/prestamos?offset=${offset}&limit=${limit}`)
+/**
+ * 
+ * @param { number } offset 
+ * @param { number } limit 
+ * @param { {
+ *  nombre: string,
+ *  apellido: string,
+ *  dni: number,
+ *  devuelto: boolean
+ * } } query 
+ */
+const getLoans = function (offset = 0, limit = 10, query = {}) {
+  return axios.get(`${baseUrl}/prestamos`,
+    {
+      method: 'get',
+      params: {
+        offset,
+        limit,
+        ...(query.nombre && { nombre: query.nombre }),
+        ...(query.apellido && { apellido: query.apellido }),
+        ...(query.dni && { dni: query.dni }),
+        ...(!(query.devuelto == null) && { devueto: query.devuelto })
+      }
+    })
     .then(function (res) {
       return res.data.map(
         (loan) => {
@@ -39,7 +56,7 @@ const getLoans = function (offset = 0, limit = 10) {
  *  mates: number,
  *  bombillas: number,
  *  termos: number,
- *  yerba: true
+ *  yerba: boolean
  * }
  * }} loan
  */
@@ -63,7 +80,7 @@ const createLoan = function (loan) {
 const reciveLoan = function (recivedLoan) {
   return axios.put(baseUrl + '/prestamos', recivedLoan)
     .then((res) => {
-      if(!res.data) return Promise.reject({ message: "respuesta nula" });
+      if (!res.data) return Promise.reject({ message: "respuesta nula" });
 
       return {
         _id: res.data._id,

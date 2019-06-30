@@ -19,8 +19,8 @@ const loanReducer = (state = initalState, action) => {
         }
 
         case 'CREATE_LOAN': {
-            newState = newState = {
-                ...state,
+            newState = {
+                retrievingData: false,
                 loans: [...state.loans, action.loan]
             }
             break;
@@ -28,7 +28,7 @@ const loanReducer = (state = initalState, action) => {
 
         case 'RECIVE_LOAN': {
             newState = {
-                ...state,
+                retrievingData: false,
                 loans: state.loans.map((loan) => {
                     return loan._id === action._id ?
                         {
@@ -45,7 +45,7 @@ const loanReducer = (state = initalState, action) => {
             newState = {
                 ...state,
                 retrievingData: true
-            }
+            };
             break;
         }
 

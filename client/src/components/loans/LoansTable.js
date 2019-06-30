@@ -25,7 +25,7 @@ class LoansTable extends React.Component {
         }
 
         return (
-            <div className="text-center d-flex flex-column h-100">
+            <div className="text-center d-flex flex-column h-100 overflow-auto">
                 <MDBTable
                     hover
                     className="text-center"

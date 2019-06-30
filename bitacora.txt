@@ -1,2 +1,2 @@
 - Ignorar por ahora: Problemas en el bloqueo de overflow, hay clases de css que seguro van a tener que volar porque son las que estaba usando para pruebas
-- Agrgar spinner de carga y mejorar los botones de paginacion de la tabla
+- Añadir implementacion de busqueda, filtrado y ordenado. Revisar primero el backend, despues vemos como se hace desde el front

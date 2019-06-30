@@ -7,33 +7,50 @@ import {
   MDBCard,
   MDBCardBody,
   MDBCardTitle,
-  MDBContainer
+  MDBContainer,
+  MDBIcon,
+  MDBBtn,
+  MDBCollapse
 } from 'mdbreact';
 
 /*
 Component modules imports */
 import LoansTable from './components/loans/LoansTable';
 import NewLoan from './components/loans/NewLoan';
-import { getLoans, changePage } from './redux/actions/loans.actions';
+import { getLoans, changePage, searchLoans } from './redux/actions/loans.actions';
 
 import { connect } from 'react-redux';
+import SearchLoan from './components/loans/SearchLoan';
 
 class App extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       dataOffset: 0,
-      dataLimit: 10
+      dataLimit: 10,
+      isSearchOpen: false
     }
 
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePreviosPage = this.handlePreviosPage.bind(this);
+    this.handleOpenSearchMenu = this.handleOpenSearchMenu.bind(this);
   }
   /*
   En la activacion del componente se despacaha la accion REFRESH_LOANS */
   componentDidMount() {
     this.props.dispatch(getLoans());
+  }
+
+  handleSearch(query) {
+    this.props.dispatch(searchLoans(query));
+    this.props.dispatch({ type: 'SHOW_LOADING' });
+  }
+
+  handleOpenSearchMenu() {
+    this.setState((state) => ({
+      isSearchOpen: !state.isSearchOpen
+    }));
   }
 
   handlePreviosPage() {
@@ -66,26 +83,46 @@ class App extends React.Component {
           fluid
           className="d-flex justify-content-center w-responsive pt-5 pb-1 app-content h-100"
         >
+
           <MDBCard
             className="card w-100 mb-1"
             wide
           >
 
             <MDBCardBody className="px-0 h-100 d-flex flex-column">
-              <div className="d-flex flex-row justify-content-between align-items-center mx-5 mb-3">
-                <MDBCardTitle> Pedidos </MDBCardTitle>
+              <div className="d-flex flex-row justify-content-between align-items-center mx-5">
+                <MDBCardTitle className="mb-0"> Pedidos </MDBCardTitle>
 
-                <NewLoan />
+                <div className="d-flex flex-row">
+                  <MDBBtn
+                    size="md"
+                    color="white"
+                    onClick={this.handleOpenSearchMenu}
+                  >{ this.state.isSearchOpen ?
+                    <MDBIcon icon="times" className="red-text mr-1" /> : '' }
+                    <MDBIcon icon="search" />
+                  </MDBBtn>
+
+                  <NewLoan />
+                </div>
               </div>
+
+              <MDBCollapse
+                isOpen={this.state.isSearchOpen}
+                className="mx-3">
+                <SearchLoan
+                className="mx-auto"
+                onSearch={ (query) => { this.handleSearch(query) }}
+                ></SearchLoan></MDBCollapse>
 
               <LoansTable
                 loans={this.props.loans}
                 onPreviousPage={this.handlePreviosPage}
                 onNextPage={this.handleNextPage}
-                showPreviousPage={ this.state.dataOffset > 0 }
-                showNextPage={ this.props.loans.length >= this.state.dataLimit }
-                loading={ this.props.tableLoading }
-                 ></LoansTable>
+                showPreviousPage={this.state.dataOffset > 0}
+                showNextPage={this.props.loans.length >= this.state.dataLimit}
+                loading={this.props.tableLoading}
+              ></LoansTable>
             </MDBCardBody>
 
           </MDBCard>

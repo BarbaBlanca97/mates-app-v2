@@ -57,6 +57,7 @@ const reciveLoan = (recivedLoan) => {
 const changePage = (offset, limit) => {
 
     return (dispatch) => {
+
         api.getLoans(offset, limit)
             .then((loans) => {
                 dispatch({
@@ -64,8 +65,22 @@ const changePage = (offset, limit) => {
                     loans: loans
                 });
             })
-            .catch()
+            .catch(() => {});
     }
 }
 
-export { reciveLoan, getLoans, createLoan, changePage };
+const searchLoans = (query) => {
+
+    return (dispatch) => {
+        api.getLoans(0, 10, query)
+        .then((loans) => {
+            dispatch({
+                type: "REFRESH_LOANS",
+                loans: loans
+            });
+        })
+        .catch(() => {});
+    }
+}
+
+export { reciveLoan, getLoans, createLoan, changePage, searchLoans };

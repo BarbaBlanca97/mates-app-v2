@@ -50,6 +50,7 @@ class NewLoan extends React.Component {
             }
         }));
         this.toggleModal();
+        this.props.dispatch({ type: 'SHOW_LOADING' });
     }
 
     render() {

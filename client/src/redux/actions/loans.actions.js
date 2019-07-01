@@ -2,19 +2,21 @@ import api from '../../api/api';
 
 /*
 Una especie de action creator, intercepta el dispatch */
-const getLoans = () => {
+const getLoans = (offset = 0, limit = 10) => {
 
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const { dataFilters } = getState().loans;
         /*
         ejecucion de codigo asincrono en el dispatch, gracias a thunk */
-        api.getLoans()
+        api.getLoans(offset, limit, dataFilters)
             .then((loans) => {
+                dispatch(changePagintationState(offset, limit));
                 dispatch({ // verdadera llamada al dispatch
                     type: 'REFRESH_LOANS',
                     loans: loans
                 });
             })
-            .catch(()=>{});
+            .catch(() => { });
     }
 }
 
@@ -28,7 +30,7 @@ const createLoan = (loan) => {
                     loan: newLoan
                 });
             })
-            .catch(()=>{});
+            .catch(() => { });
     }
 }
 
@@ -50,37 +52,35 @@ const reciveLoan = (recivedLoan) => {
                     recivedLoan: updatedLoan.devolucion
                 });
             })
-            .catch(()=>{});
+            .catch(() => { });
     }
 }
 
-const changePage = (offset, limit) => {
+const changePagintationState = (offset, limit) => {
+    return {
+        type: 'CHANGE_PAGINATION',
+        offset,
+        limit
+    }
+}  
 
-    return (dispatch) => {
-
-        api.getLoans(offset, limit)
-            .then((loans) => {
-                dispatch({
-                    type: "REFRESH_LOANS",
-                    loans: loans
-                });
-            })
-            .catch(() => {});
+const updateDataFilters = (newDataFilters) => {
+    return {
+        type: "UPDATE_DATA_FILTERS",
+        newDataFilters
     }
 }
 
-const searchLoans = (query) => {
-
-    return (dispatch) => {
-        api.getLoans(0, 10, query)
-        .then((loans) => {
-            dispatch({
-                type: "REFRESH_LOANS",
-                loans: loans
-            });
-        })
-        .catch(() => {});
+const showLoadingIndicator = () => {
+    return {
+        type: "SHOW_LOADING"
     }
 }
 
-export { reciveLoan, getLoans, createLoan, changePage, searchLoans };
+export { 
+    reciveLoan, 
+    getLoans, 
+    createLoan,
+    updateDataFilters,
+    showLoadingIndicator
+ };

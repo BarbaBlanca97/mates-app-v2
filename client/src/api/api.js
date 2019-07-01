@@ -22,7 +22,7 @@ const getLoans = function (offset = 0, limit = 10, query = {}) {
         ...(query.nombre && { nombre: query.nombre }),
         ...(query.apellido && { apellido: query.apellido }),
         ...(query.dni && { dni: query.dni }),
-        ...(!(query.devuelto == null) && { devueto: query.devuelto })
+        ...(!(query.devuelto == null) && { devuelto: query.devuelto })
       }
     })
     .then(function (res) {

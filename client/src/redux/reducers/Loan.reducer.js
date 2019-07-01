@@ -1,6 +1,9 @@
 const initalState = {
     loans: [],
-    retrievingData: false
+    retrievingData: false,
+    dataFilters: {},
+    dataOffset: 0,
+    dataLimit: 10
 };
 
 /**
@@ -12,6 +15,7 @@ const loanReducer = (state = initalState, action) => {
     switch (action.type) {
         case 'REFRESH_LOANS': {
             newState = {
+                ...state,
                 loans: action.loans,
                 retrievingData: false
             }
@@ -20,6 +24,7 @@ const loanReducer = (state = initalState, action) => {
 
         case 'CREATE_LOAN': {
             newState = {
+                ...state,
                 retrievingData: false,
                 loans: [...state.loans, action.loan]
             }
@@ -28,6 +33,7 @@ const loanReducer = (state = initalState, action) => {
 
         case 'RECIVE_LOAN': {
             newState = {
+                ...state,
                 retrievingData: false,
                 loans: state.loans.map((loan) => {
                     return loan._id === action._id ?
@@ -45,6 +51,23 @@ const loanReducer = (state = initalState, action) => {
             newState = {
                 ...state,
                 retrievingData: true
+            };
+            break;
+        }
+
+        case 'CHANGE_PAGINATION': {
+            newState = {
+                ...state,
+                dataOffset: action.offset,
+                dataLimit: action.limit
+            };
+            break;
+        }
+
+        case 'UPDATE_DATA_FILTERS': {
+            newState = {
+                ...state,
+                dataFilters: action.newDataFilters
             };
             break;
         }

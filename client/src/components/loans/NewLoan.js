@@ -10,7 +10,6 @@ import {
 
 import CreateLoan from './CreateLoan';
 import { connect } from 'react-redux';
-import { createLoan } from '../../redux/actions/loans.actions';
 
 class NewLoan extends React.Component {
 
@@ -34,23 +33,8 @@ class NewLoan extends React.Component {
     }
 
     handleLoanSubmit(loan) {
-        console.log(loan);
-        this.props.dispatch(createLoan({
-            persona: {
-                dni: loan.dni,
-                name: loan.name,
-                lastName: loan.lastName,
-                facultad: 'unknown'
-            },
-            pedido: {
-                mates: loan.mates,
-                bombillas: loan.bombillas,
-                termos: loan.termos,
-                yerba: loan.yerba
-            }
-        }));
         this.toggleModal();
-        this.props.dispatch({ type: 'SHOW_LOADING' });
+        this.props.handleSubmit(loan);
     }
 
     render() {

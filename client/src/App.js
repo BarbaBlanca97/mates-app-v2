@@ -17,7 +17,13 @@ import {
 Component modules imports */
 import LoansTable from './components/loans/LoansTable';
 import NewLoan from './components/loans/NewLoan';
-import { getLoans, changePage, searchLoans } from './redux/actions/loans.actions';
+
+import { 
+  getLoans,
+  createLoan,
+  showLoadingIndicator,
+  updateDataFilters
+} from './redux/actions/loans.actions';
 
 import { connect } from 'react-redux';
 import SearchLoan from './components/loans/SearchLoan';
@@ -26,15 +32,15 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
-      dataOffset: 0,
-      dataLimit: 10,
       isSearchOpen: false
     }
 
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePreviosPage = this.handlePreviosPage.bind(this);
     this.handleOpenSearchMenu = this.handleOpenSearchMenu.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
   }
   /*
   En la activacion del componente se despacaha la accion REFRESH_LOANS */
@@ -42,9 +48,10 @@ class App extends React.Component {
     this.props.dispatch(getLoans());
   }
 
-  handleSearch(query) {
-    this.props.dispatch(searchLoans(query));
-    this.props.dispatch({ type: 'SHOW_LOADING' });
+  handleFilterChange(query) {
+    this.props.dispatch(updateDataFilters(query));
+    this.props.dispatch(getLoans(0, this.props.dataLimit));
+    this.props.dispatch(showLoadingIndicator());
   }
 
   handleOpenSearchMenu() {
@@ -54,24 +61,41 @@ class App extends React.Component {
   }
 
   handlePreviosPage() {
-    if (this.state.dataOffset > 0) {
-      let nextDataOffset = this.state.dataOffset - 10;
+    if (this.props.dataOffset > 0) {
+      let nextDataOffset = this.props.dataOffset - 10;
 
       if (nextDataOffset < 0) nextDataOffset = 0;
 
-      this.setState({ dataOffset: nextDataOffset });
-      this.props.dispatch(changePage(nextDataOffset, this.state.dataLimit));
-      this.props.dispatch({ type: 'SHOW_LOADING' });
+      this.props.dispatch(getLoans(nextDataOffset, this.props.dataLimit));
+      this.props.dispatch(showLoadingIndicator());
     }
   }
 
   handleNextPage() {
-    let nextDataOffset = this.state.dataOffset + 10;
+    let nextDataOffset = this.props.dataOffset + this.props.dataLimit;
 
-    this.setState({ dataOffset: nextDataOffset });
-    this.props.dispatch(changePage(nextDataOffset, this.state.dataLimit));
-    this.props.dispatch({ type: 'SHOW_LOADING' });
+    this.props.dispatch(getLoans(nextDataOffset, this.props.dataLimit));
+    this.props.dispatch(showLoadingIndicator());
   }
+
+  handleNewLoanSubmit(newLoan) {
+    console.log(newLoan);
+    this.props.dispatch(createLoan({
+        persona: {
+            dni: newLoan.dni,
+            name: newLoan.name,
+            lastName: newLoan.lastName,
+            facultad: 'unknown'
+        },
+        pedido: {
+            mates: newLoan.mates,
+            bombillas: newLoan.bombillas,
+            termos: newLoan.termos,
+            yerba: newLoan.yerba
+        }
+    }));
+    this.props.dispatch(showLoadingIndicator());
+}
 
   render() {
     return (
@@ -103,7 +127,7 @@ class App extends React.Component {
                     <MDBIcon icon="search" />
                   </MDBBtn>
 
-                  <NewLoan />
+                  <NewLoan handleSubmit={ (newLoan) => { this.handleNewLoanSubmit(newLoan) }}/>
                 </div>
               </div>
 
@@ -112,15 +136,15 @@ class App extends React.Component {
                 className="mx-3">
                 <SearchLoan
                 className="mx-auto"
-                onSearch={ (query) => { this.handleSearch(query) }}
+                onSearch={ (query) => { this.handleFilterChange(query) }}
                 ></SearchLoan></MDBCollapse>
 
               <LoansTable
                 loans={this.props.loans}
                 onPreviousPage={this.handlePreviosPage}
                 onNextPage={this.handleNextPage}
-                showPreviousPage={this.state.dataOffset > 0}
-                showNextPage={this.props.loans.length >= this.state.dataLimit}
+                showPreviousPage={this.props.dataOffset > 0}
+                showNextPage={this.props.loans.length >= this.props.dataLimit}
                 loading={this.props.tableLoading}
               ></LoansTable>
             </MDBCardBody>
@@ -139,7 +163,9 @@ por el provider, esta funcion mapea lo interesante */
 const mapStateToProps = (state) => {
   return {
     loans: state.loans.loans,
-    tableLoading: state.loans.retrievingData
+    tableLoading: state.loans.retrievingData,
+    dataOffset: state.loans.dataOffset,
+    dataLimit: state.loans.dataLimit
   }
 }
 

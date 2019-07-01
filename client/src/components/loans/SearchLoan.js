@@ -12,23 +12,32 @@ class SearchLoan extends React.Component {
         this.state = {
             nombre: '',
             apellido: '',
-            dni: ''
+            dni: '',
+            selectedBox: 0
         }
 
         this.handleInputChanges = this.handleInputChanges.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleBoxChecks = this.handleBoxChecks.bind(this);
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        this.props.onSearch(this.state);
+        let filters = {
+            nombre: this.state.nombre,
+            apellido: this.state.apellido,
+            dni: this.state.dni,
+            ...(this.state.selectedBox !== 0 && { devuelto: this.state.selectedBox === 1 ? true : false})
+        }
+        this.props.onSearch(filters);
+    }
+
+    handleBoxChecks(box) {
+        this.setState((state) => ({ selectedBox: (box === state.selectedBox) ? 0 : box }))
     }
 
     handleInputChanges(event) {
-        if (event.target.type === 'checkbox')
-            this.setState({ devuelto: event.target.checked });
-        else
-            this.setState({ [event.target.id]: event.target.value });
+        this.setState({ [event.target.id]: event.target.value });
     }
 
     render() {
@@ -44,7 +53,7 @@ class SearchLoan extends React.Component {
                 > Buscar </MDBBtn>
                 <div className="mx-2">
                     <MDBInput
-                    id="dni"
+                        id="dni"
                         outline
                         label="DNI"
                         type="number"
@@ -55,7 +64,7 @@ class SearchLoan extends React.Component {
                 </div>
                 <div className="mx-2">
                     <MDBInput
-                    id="nombre"
+                        id="nombre"
                         outline
                         label="Nombre"
                         className="mb-0"
@@ -74,15 +83,29 @@ class SearchLoan extends React.Component {
                     ></MDBInput>
                 </div>
 
+                <div className="text-center"><span>Devuelto</span>
+                    <div className="d-flex flex-row">
+                        <div className="form-check mx-2">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="devuelto-si"
+                                onChange={() => { this.handleBoxChecks(1) }}
+                                checked={ this.state.selectedBox === 1 }
+                            />
+                            <label htmlFor="devuelto-si" className="grey-text">Si</label>
+                        </div>
 
-                <div className="form-check mx-2">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="devuelto"
-                        onChange={(event) => { this.handleInputChanges(event) }}
-                    />
-                    <label htmlFor="devuelto" className="grey-text">Devuelto</label>
+                        <div className="form-check mx-2">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="devuelto-no"
+                                onChange={() => { this.handleBoxChecks(2) }}
+                                checked={ this.state.selectedBox === 2 }
+                            />
+                            <label htmlFor="devuelto-no" className="grey-text">No</label>
+                        </div></div>
                 </div>
             </MDBFormInline>
         );

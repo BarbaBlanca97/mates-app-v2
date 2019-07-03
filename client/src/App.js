@@ -132,12 +132,13 @@ class App extends React.Component {
               </div>
 
               <MDBCollapse
-                isOpen={this.state.isSearchOpen}
-                className="mx-3">
-                <SearchLoan
-                className="mx-auto"
-                onSearch={ (query) => { this.handleFilterChange(query) }}
-                ></SearchLoan></MDBCollapse>
+                isOpen={ this.state.isSearchOpen }
+              >
+                  <SearchLoan
+                    className="mx-auto"
+                    onSearch={ (query) => { this.handleFilterChange(query) }}
+                  />
+              </MDBCollapse>
 
               <LoansTable
                 loans={this.props.loans}

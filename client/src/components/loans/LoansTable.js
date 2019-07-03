@@ -25,16 +25,16 @@ class LoansTable extends React.Component {
         }
 
         return (
-            <div className="text-center d-flex flex-column h-100 overflow-auto">
+            <div className="text-center d-flex flex-column h-100">
                 <MDBTable
                     hover
                     className="text-center"
                     maxHeight="100%"
                     scrollY={true}
+                    fixed
                 >
                     <MDBTableHead>
                         <tr>
-                            <th>ID</th>
                             <th>DNI</th>
                             <th>Nombre</th>
                             <th>Pedido</th>
@@ -46,7 +46,6 @@ class LoansTable extends React.Component {
                         {this.props.loans.map((value) => {
                             return (
                                 <tr key={value._id} >
-                                    <td className="align-middle"> {value._id} </td>
                                     <td className="align-middle"> {value.dni} </td>
                                     <td className="align-middle"> {value.name} </td>
                                     <td>
@@ -69,8 +68,13 @@ class LoansTable extends React.Component {
                         })}
                     </MDBTableBody>
                 </MDBTable>
-                <div className="position-relative d-flex flex-row justify-content-center mt-1" >
-                    {this.props.loading ? <div style={paginationStyle} className="ml-3 my-2"><div className="spinner-border spinner-border-sm text-info" ></div></div> : ""}
+                <div className="position-relative d-flex flex-row justify-content-center mt-1 w-100"
+                    style={{ height: "40px" }}
+                >
+                    { this.props.loading ?
+                        <div style={paginationStyle} className="ml-3">
+                            <div className="spinner-border spinner-border-sm text-info" />
+                        </div> : "" }
                     <div>
                         {this.props.showPreviousPage ?
                             <MDBBtn
